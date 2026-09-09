@@ -135,6 +135,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const concepts = { CPU: 'Unidad central que coordina y ejecuta instrucciones.', ALU: 'Unidad que realiza operaciones aritméticas y lógicas.', UC: 'Unidad que interpreta instrucciones y coordina componentes.', REGISTROS: 'Memoria interna muy rápida para datos temporales.', FETCH: 'Etapa en la que la CPU obtiene una instrucción.', DECODE: 'Etapa en la que la instrucción es interpretada.', EXECUTE: 'Etapa en la que se realiza la operación.', CACHE: 'Memoria rápida que conserva datos usados con frecuencia.', RAM: 'Memoria principal temporal del sistema.', IP: 'Dirección lógica de un dispositivo en una red.', MAC: 'Identificador físico de una interfaz de red.', SWITCH: 'Dispositivo que conecta equipos en una red local.', ROUTER: 'Dispositivo que interconecta redes.', RED: 'Conjunto de dispositivos que intercambian información.', 'EVIDENCIA DIGITAL': 'Información con valor para comprender una actividad informática.', 'LIVE FORENSICS': 'Análisis de información mientras el sistema permanece operativo.' };
   $$('#conceptCloud button').forEach(button => button.addEventListener('click', () => { $('#conceptOutput').textContent = `${button.dataset.concept}: ${concepts[button.dataset.concept]}`; $$('#conceptCloud button').forEach(item => item.classList.toggle('active', item === button)); }));
 
+  $$('.feed-action').forEach(button => button.addEventListener('click', () => {
+    const item = button.closest('.feed-item');
+    const saved = button.textContent.includes('Guardar');
+    item.classList.toggle(saved ? 'saved' : 'read');
+    button.innerHTML = saved ? 'Recurso guardado <span>✓</span>' : 'Marcado como leído <span>✓</span>';
+  }));
+
+  $('#contactForm')?.addEventListener('submit', event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const feedback = $('#formFeedback');
+    if (!form.checkValidity()) {
+      feedback.textContent = 'Completa los campos para enviar tu mensaje.';
+      form.reportValidity();
+      return;
+    }
+    feedback.textContent = 'Mensaje recibido. Gracias por participar en la comunidad.';
+    form.reset();
+  });
+
+  $('#subscribeForm')?.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = $('#subscriberEmail');
+    const feedback = $('#subscribeFeedback');
+    if (!input.checkValidity()) {
+      feedback.textContent = 'Introduce un correo válido.';
+      input.reportValidity();
+      return;
+    }
+    localStorage.setItem('cybertech-subscriber', input.value);
+    feedback.textContent = 'Suscripción confirmada. Te esperamos cada semana.';
+    input.value = '';
+  });
+
   const exportToPDF = () => {
     if (typeof html2pdf === 'undefined') { window.print(); return; }
     html2pdf().set({ margin: .35, filename: 'cybertech-arquitectura-redes-ciberdelitos.pdf', image: { type: 'jpeg', quality: .95 }, html2canvas: { scale: 1.4, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from($('#printArea')).save();
